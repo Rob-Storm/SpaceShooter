@@ -39,7 +39,6 @@ public class GameMode : MonoBehaviour
         canSpawn = false;
         difficultyTimer = -1;
         AddDifficulty();
-        Debug.Log("Player be dead!");
     }
 
     private void Start()
@@ -83,9 +82,7 @@ public class GameMode : MonoBehaviour
 
             case Difficulty.Hard: 
                 spawnTimer = HARD_DIFFICULTY_SPAWN_TIMER;  break;
-        }
-
-        Debug.Log(Difficulty);
+        }   
     }
 
     private IEnumerator SpawnAsteroid()
@@ -94,8 +91,6 @@ public class GameMode : MonoBehaviour
         {
             Instantiate(asteroid, new Vector3(random.NextFloat(minSpawnVectorX, maxSpawnVectorX), 8.5f, 0f), Quaternion.identity);
         }
-
-        Debug.Log("Spawned Asteroid");
 
         AddDifficulty();
 
