@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerShooting : MonoBehaviour
 {
     private PlayerInput playerInput;
+    private Player player;
 
     [SerializeField] private Transform shootTransform;
 
@@ -16,7 +17,7 @@ public class PlayerShooting : MonoBehaviour
     private void Awake()
     {
         playerInput = GetComponent<PlayerInput>();
-        
+        player = GetComponent<Player>();
     }
     private void Update()
     {
@@ -30,6 +31,8 @@ public class PlayerShooting : MonoBehaviour
             GameObject instBullet = Instantiate(bullet, shootTransform);
 
             instBullet.transform.parent = null;
+
+            player.audioSource.PlayOneShot(player.shootSFX);
 
             canShoot = false;
 

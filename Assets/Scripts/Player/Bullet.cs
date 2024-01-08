@@ -1,35 +1,39 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
     private Rigidbody2D rb;
 
-    [SerializeField] private float bulletSpeed;
+    private float bulletSpeed = 3.5f;
     private Vector2 movementVector = new Vector2(0, 1);
 
-    [SerializeField] private float gameObjectLifetime;
+    private const float OBJECT_LIFETIME = 5.0f;
+
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip destroyClip;
 
     public event EventHandler OnScoreUpdate;
+
+    private new Collider2D collider2D;
+    private new SpriteRenderer renderer;
+
 
     private void Awake()
     {
        rb = GetComponent<Rigidbody2D>();
+       audioSource = GetComponent<AudioSource>();
+        collider2D = GetComponent<Collider2D>();
+        renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void Start()
     {
-        StartCoroutine(DestroyGameObject());
+        StartCoroutine(DestroyGameObject(OBJECT_LIFETIME, this.gameObject));
 
         rb.velocity = movementVector * bulletSpeed;
-    }
-
-    private IEnumerator DestroyGameObject()
-    {
-        yield return new WaitForSeconds(gameObjectLifetime);
-
-        Destroy(this.gameObject);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -38,9 +42,25 @@ public class Bullet : MonoBehaviour
 
         if (asteroid != null)
         {
-            Destroy(collision.gameObject);
-        }
+            audioSource.PlayOneShot(destroyClip);
+            collider2D.enabled = false;
+            renderer.enabled = false;
 
-        Destroy(this.gameObject);
+            Player.AddScore(1);
+
+            Destroy(collision.gameObject);
+
+            StartCoroutine(DestroyGameObject(destroyClip.length, this.gameObject));
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+    private IEnumerator DestroyGameObject(float delay, GameObject gameObject)
+    {
+        yield return new WaitForSeconds(delay);
+
+        Destroy(gameObject);
     }
 }

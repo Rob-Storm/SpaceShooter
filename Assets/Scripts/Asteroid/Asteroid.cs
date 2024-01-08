@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Asteroid : MonoBehaviour
@@ -13,8 +14,12 @@ public class Asteroid : MonoBehaviour
     private float objectLifetime;
     private const float EASY_LIFETIME = 10f, MEDIUM_LIFETIME = 6f, HARD_LIFETIME = 3f;
 
+    private const float MIN_SCALE = 0.75f, MAX_SCALE = 2.0f;
+
     private void Awake()
     {
+        Unity.Mathematics.Random random = new Unity.Mathematics.Random((uint)System.DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+
         rb = GetComponent<Rigidbody2D>();
 
         switch(GameMode.Difficulty) 
@@ -29,6 +34,12 @@ public class Asteroid : MonoBehaviour
                 moveSpeed = HARD_SPEED; objectLifetime = HARD_LIFETIME;  break;
 
         }
+
+        float randomScale = random.NextFloat(MIN_SCALE, MAX_SCALE);
+
+        transform.localScale = new Vector3(randomScale, randomScale, 1.0f);
+
+        transform.rotation = Quaternion.AngleAxis(random.NextInt(0, 359), Vector3.forward); // magic number time, everyone should know there are 360 degrees in a circle 
     }
 
     private void Start()

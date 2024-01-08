@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -7,22 +8,26 @@ public class PlayerHealth : MonoBehaviour
     public static bool IsPlayerAlive { get; private set; } = true;
     public event EventHandler OnPlayerDie;
 
-    [SerializeField] private int health = 2;
+    public event EventHandler OnPlayerHit;
+
+    [SerializeField] public int Health { get; private set; }  = 2;
 
     [SerializeField] private float invincibilityTime;
     private bool isInvincible;
     public void SubtractHealth(int amount)
     {
-        health -= amount;
+        Health -= amount;
 
-        if(health <= 0)
+        if(Health <= 0)
         {
             Die();
         }
 
+        OnPlayerHit?.Invoke(this, EventArgs.Empty);
+
         StartCoroutine(ResetInvincibility());
 
-        Debug.Log($"Health = {health}");
+        Debug.Log($"Health = {Health}");
     }
     private void Die()
     {

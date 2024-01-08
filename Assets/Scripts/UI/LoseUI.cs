@@ -8,6 +8,6 @@ public class LoseUI : MonoBehaviour
 {
     public void RestartLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().ToString());
+        SceneManager.LoadScene(0);
     }
 }

@@ -10,7 +10,14 @@ public class ScoreUI : MonoBehaviour
     private void Awake()
     {
         scoreText = GetComponentInChildren<TMP_Text>();
+
+        Player.OnScoreChanged += OnScoreChanged;
+
+        scoreText.text = $"Score: {Player.Score}";
     }
 
-
+    private void OnScoreChanged(object sender, System.EventArgs e)
+    {
+        scoreText.text = $"Score: {Player.Score}";
+    }
 }

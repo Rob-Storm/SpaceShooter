@@ -109,5 +109,4 @@ public class GameMode : MonoBehaviour
         playerHealth.OnPlayerDie -= OnPlayerDie;
         StopAllCoroutines();
     }
-
 }
